@@ -14,7 +14,7 @@ def replacestr(value,key):
 @register.filter
 def keywordfilter(value,key):
     tmp=pd.DataFrame()
-    df=pd.read_pickle(r"C:\Users\87385816\Documents\News_Clustering\news\newsui\newsdata.pkl")
+    df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
     tmp=df[df.apply(lambda x:value in x.Entity['LOC'],axis=1)]
     tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['ORG'],axis=1)]])
     tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['GPE'],axis=1)]])
