@@ -25,7 +25,7 @@ SECRET_KEY = 'ihcz!#div!t@gfh$zw8#mlwhg7loy58p-e=)9x(5*_zj&1r*mn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["djangonews.azurewebsites.net","localhost"]
+ALLOWED_HOSTS = ["djangonews.azurewebsites.net","localhost","*"]
 
 
 # Application definition
