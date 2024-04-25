@@ -24,7 +24,7 @@ file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
 
 
 df=pd.read_pickle(file_path)
-directory = r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui"
+directory = os.path.join(BASE_DIR, 'newsui')
 for root,dirs,files in os.walk(directory):
     for file in files:
        if file.endswith(".csv"):
@@ -34,7 +34,7 @@ for root,dirs,files in os.walk(directory):
             df=df.drop(columns='Unnamed: 0')
             df.fillna('',inplace=True)
 df=df.drop_duplicates(subset=['Link'])
-df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
+df.to_pickle(file_path)
 for root,dirs,files in os.walk(directory):
     for file in files:
         if file.endswith(".csv"):
