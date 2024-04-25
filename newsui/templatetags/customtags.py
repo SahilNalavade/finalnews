@@ -2,6 +2,10 @@ from django import template
 register = template.Library() 
 from ..models import article
 import pandas as pd
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
 
 @register.filter 
 def split(value,key): 
@@ -14,7 +18,7 @@ def replacestr(value,key):
 @register.filter
 def keywordfilter(value,key):
     tmp=pd.DataFrame()
-    df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+    df=pd.read_pickle(file_path)
     tmp=df[df.apply(lambda x:value in x.Entity['LOC'],axis=1)]
     tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['ORG'],axis=1)]])
     tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['GPE'],axis=1)]])
