@@ -16,10 +16,14 @@ from gensim import models,corpora
 from gensim.utils import simple_preprocess
 from wordcloud import WordCloud
 from matplotlib import pyplot as plt 
+from pathlib import Path
 
-df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+df=pd.read_pickle(file_path)
+#df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
 print('original df',len(df))
-directory = r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui"
+directory = os.path.join(BASE_DIR, 'newsui')
 for root,dirs,files in os.walk(directory):
     for file in files:
        if file.endswith(".csv"):
@@ -59,7 +63,8 @@ df.Text_token=df.Text_token.apply(lambda x:bigram_mod[x])
 #Making Trigrams
 df.Text_token=df.Text_token.apply(lambda x:trigram_mod[bigram_mod[x]])
 df.Text_token=df.Text_token.apply(lambda x:[lemma(wd) for wd in x])
-df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
+file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+df.to_pickle(file_path)
 print('updated df',len(df))
 defence=[' ship ',' ships ','nuclear','drone','submarine','propulsion','sea machine','defence ministry','destroyer','combat suit','vessel','shipyard','shipbuilding','naval','gun','warship','marine','radar','bridge','ministry of defence',' mod ','(mod)',' dod ','(dod)','lithium','lithium-ion',' aip ','sonar','department of defence','uk mod','u.k. mod','us dod','u.s. dod','ministries of defense','artificial intelligence','a.i.','digital twin',' roe ','rubin','indian navy','indegenize','make in india','atmanirbhar bharat','atmanirbhar','defense export','defense procurement',' gst ',' idex ','defense start-up','defense budget','predictive maintainence','defense startup','lada-class','mazagon','tkms','dmse','thyssenkrupp','daewoo','rdel','p75','p75i','rfp',' aon ','ssbn','ssn','atvp','arihant','arighat','astute','virginia','scorpene',' lada ','drdo','amur','barracuda','kss','s80']
 political=[' mod ','(mod)','ministry of defence','ministries of defence','uk mod','u.k. mod','us dod','u.s. dod','department of defense','defense ministry',' dod ','(dod)','ministry of defence','indian navy','indegenize','make in india','atmanirbhar bharat']
@@ -71,7 +76,8 @@ p_75=['p75','p75i','rfp',' aon ','acceptance of necessity']
 submarines=['submarine','conventional submarine','ssbn','ssn','submersible ship nuclear','submersible ship ballistic missile nuclear','atvp','vessel','submarine','arihant','arighat','astute','virginia','scorpene',' lada ','lada class','lada-class','amur','sea machine','barracuda','s80','kss']
 
 def tagdata(defencelst,political,economic,technology,collab,competitor,p_75,submarines):
-    tmpdf=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+    file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+    tmpdf=pd.read_pickle(file_path)
     lst=[]
     entity_dict_full={"LOC":[],"NORP":[],"GPE":[],"ORG":[],"PERSON":[],"PRODUCT":[],"DEFENCE":[],\
     "POLITICAL":[],"ECONOMIC":[],"TECHNO":[],"COLLAB":[],"COMPET":[],"P75":[],"SUBMARINE":[]}
@@ -124,7 +130,8 @@ def tagdata(defencelst,political,economic,technology,collab,competitor,p_75,subm
 
     tmpdf['Entity']=lst
     df=tmpdf
-    df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
+    file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+    df.to_pickle(file_path)
     return entity_dict_full
 def home(request):
     checked_words = request.POST.getlist('checks')
@@ -145,7 +152,8 @@ def home(request):
                             list(f_dict.values())[6],list(f_dict.values())[7])
     else:
         entity_dict_full=tagdata(defence,political,economic,technology,collab,competitor,p_75,submarines)
-    df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+    file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+    df=pd.read_pickle(file_path)
     df=df[df.apply(lambda x:len(x.Entity['DEFENCE'])>0 and (len(x.Entity['POLITICAL'])+\
                                             len(x.Entity['ECONOMIC'])+len(x.Entity['TECHNO'])+\
                                             len(x.Entity['COLLAB'])+len(x.Entity['COMPET'])+\
@@ -209,7 +217,9 @@ def home(request):
         plt.imshow(wordcloud)
         plt.axis("off") 
         plt.tight_layout(pad = 0)   
-        wordcloud.to_file(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\static\img\\'+i+'.png')
+        file_path = os.path.join(BASE_DIR, 'static\img\\')
+        wordcloud.to_file(file_path + i+'.png')
+        #wordcloud.to_file(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\static\img\\'+i+'.png')
     #Filter keywords dynamic
     tmpdict={'defence':defence,'political':political,'economic':economic,\
                             'technology':technology,'collab':collab,'competitor':competitor,\
