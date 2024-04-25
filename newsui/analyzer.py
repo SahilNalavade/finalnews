@@ -16,11 +16,14 @@ from pattern.en import lemma
 from gensim import models,corpora
 from gensim.utils import simple_preprocess
 
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
 # In[266]:
 
 
-df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+df=pd.read_pickle(file_path)
 directory = r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui"
 for root,dirs,files in os.walk(directory):
     for file in files:
