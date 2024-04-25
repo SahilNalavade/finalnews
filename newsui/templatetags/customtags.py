@@ -1,33 +1,35 @@
-from django import template 
-register = template.Library() 
-from ..models import article
+import os
 import pandas as pd
-from pathlib import Path
+from django import template
+from ..models import article  # Assuming article is a Django model defined elsewhere
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+register = template.Library()
 
-@register.filter 
-def split(value,key): 
-    return value.split(key)
-    
-@register.filter 
-def replacestr(value,key): 
-    return value.replace(key,'_')
-    
 @register.filter
-def keywordfilter(value,key):
-    tmp=pd.DataFrame()
-    df=pd.read_pickle(file_path)
-    tmp=df[df.apply(lambda x:value in x.Entity['LOC'],axis=1)]
-    tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['ORG'],axis=1)]])
-    tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['GPE'],axis=1)]])
-    tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['PERSON'],axis=1)]])
-    tmp=pd.concat([tmp, df[df.apply(lambda x:value in x.Entity['NORP'],axis=1)]])
-    tmp=tmp[['Heading', 'Link', 'Image', 'Summary','Date']]
-    article_list=[]
-    for i in tmp.values:
-        a=article()
-        a.title,a.img,a.lnk,a.summary,a.date=i[0],i[2],i[1],i[3][:500],i[4]
-        article_list.append(a)
-    return article_list
+def split(value, key):
+    return value.split(key)
+
+@register.filter
+def replacestr(value, key):
+    return value.replace(key, '_')
+
+@register.filter
+def keywordfilter(value, key):
+    # Assuming newsdata.pkl is in the same directory as the Django app
+    pkl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'newsdata.pkl')
+    
+    try:
+        df = pd.read_pickle(pkl_path)
+        entity_cols = ['LOC', 'ORG', 'GPE', 'PERSON', 'NORP']
+        filtered_rows = df[df['Entity'].apply(lambda x: any(value in x[entity] for entity in entity_cols))]
+        filtered_data = filtered_rows[['Heading', 'Link', 'Image', 'Summary', 'Date']].copy()
+        filtered_data['Summary'] = filtered_data['Summary'].apply(lambda x: x[:500])  # Truncate summary if needed
+        article_list = [article(title=row['Heading'], img=row['Image'], lnk=row['Link'], summary=row['Summary'], date=row['Date']) for _, row in filtered_data.iterrows()]
+        return article_list
+    except FileNotFoundError:
+        # Handle file not found error
+        return []
+    except Exception as e:
+        # Handle other exceptions
+        print(f"Error: {e}")
+        return []
