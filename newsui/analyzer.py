@@ -20,8 +20,8 @@ from gensim.utils import simple_preprocess
 # In[266]:
 
 
-df=pd.read_pickle(r"C:\Users\87385816\Documents\News_Clustering\news\newsui\newsdata.pkl")
-directory = r"C:\Users\20311107\env_site\Scripts\news\newsui"
+df=pd.read_pickle(r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+directory = r"https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui"
 for root,dirs,files in os.walk(directory):
     for file in files:
        if file.endswith(".csv"):
@@ -31,7 +31,7 @@ for root,dirs,files in os.walk(directory):
             df=df.drop(columns='Unnamed: 0')
             df.fillna('',inplace=True)
 df=df.drop_duplicates(subset=['Link'])
-df.to_pickle(r'C:\Users\87385816\Documents\News_Clustering\news\newsui\newsdata.pkl')
+df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
 for root,dirs,files in os.walk(directory):
     for file in files:
         if file.endswith(".csv"):
