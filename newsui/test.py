@@ -14,8 +14,8 @@ from gensim.utils import simple_preprocess
 
 
 
-#df=pd.read_pickle(r"C:\Users\20311107\env_site\Scripts\news\newsui\newsdata.pkl")
-df=pd.read_csv(r"C:\Users\20311107\env_site\Scripts\news\newsui\news_data (7).csv")
+#df=pd.read_pickle(r"'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
+df=pd.read_csv(r"'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\news_data (7).csv")
 print(df.columns,df.dtypes)
 df[['Heading','Text','Summary','Date']]=df[['Heading','Text','Summary','Date']].apply(lambda x:x.astype(str))
 df[['Heading','Text','Summary','Date']]=df[['Heading','Text','Summary','Date']].apply(lambda x:x.apply(lambda y:y.replace(r'\n','').replace(r'\t','').replace(r'\r','')))
@@ -31,8 +31,9 @@ df=df[df.Text!=""]
 print(len(df))
 df=df.drop(columns=['Unnamed: 0'])
 print(df.columns)
-df.to_pickle(r'C:\Users\87385816\Documents\News_Clustering\news\newsui\newsdata.pkl')
+df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
 '''
+# 'https://raw.githubusercontent.com/{repo_owner}/{repo_name}/main/{file_path}'
 df['Text_token']=df.Text.apply(lambda x:simple_preprocess(x, deacc=True))
 df.Text_token=df.Text_token.apply(lambda x:[z for z in x if z not in ENGLISH_STOP_WORDS])
 bigram = models.Phrases(df.Text_token, min_count=5, threshold=100) # higher threshold fewer phrases.
