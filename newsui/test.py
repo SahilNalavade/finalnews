@@ -11,11 +11,14 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from pattern.en import lemma
 from gensim import models,corpora
 from gensim.utils import simple_preprocess
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = os.path.join(BASE_DIR, 'newsui', 'news_data (7).csv')
 
 
 #df=pd.read_pickle(r"'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl")
-df=pd.read_csv(r"'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\news_data (7).csv")
+df=pd.read_csv(file_path)
 print(df.columns,df.dtypes)
 df[['Heading','Text','Summary','Date']]=df[['Heading','Text','Summary','Date']].apply(lambda x:x.astype(str))
 df[['Heading','Text','Summary','Date']]=df[['Heading','Text','Summary','Date']].apply(lambda x:x.apply(lambda y:y.replace(r'\n','').replace(r'\t','').replace(r'\r','')))
@@ -31,7 +34,8 @@ df=df[df.Text!=""]
 print(len(df))
 df=df.drop(columns=['Unnamed: 0'])
 print(df.columns)
-df.to_pickle(r'https:\\raw.githubusercontent.com\SahilNalavade\finalnews\master\News_Clustering\news\newsui\newsdata.pkl')
+file_path = os.path.join(BASE_DIR, 'newsui', 'newsdata.pkl')
+df.to_pickle(file_path)
 '''
 # 'https://raw.githubusercontent.com/{repo_owner}/{repo_name}/main/{file_path}'
 df['Text_token']=df.Text.apply(lambda x:simple_preprocess(x, deacc=True))
